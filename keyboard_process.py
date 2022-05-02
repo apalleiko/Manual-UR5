@@ -71,34 +71,43 @@ class keyboard_obj(object):
 		msg = JoyCmd()
 		#Detect forward and backward keys assigned to 'w' and 's'
 		if 'w' in char:
-			msg.axis1 =  1.0
+			msg.axis1 += 1.0
 		elif 's' in char:
-			msg.axis1 = msg.axis1 - 1.0
+			msg.axis1 -= 1.0
 
 		#Detect left and right keys 'a' and 'd'
 		elif 'a' in char:
-			msg.axis2 =  1.0
+			msg.axis2 += 1.0
 		elif 'd' in char:
-			msg.axis2 = msg.axis2 - 1.0
+			msg.axis2 -= 1.0
 
 		#Detect rotation keys 'q' for counterclockwise, 'e' for clockwise
 
 		elif 'q' in char:
-			msg.axis3 =  1.0
+			msg.axis3 += 1.0
 		elif 'e' in char:
-			msg.axis3 = msg.axis3 - 1.0
+			msg.axis3 -= 1.0
+
+
+		elif 'n' in char:
+			msg.btn1 += 1
+		elif 'm' in char:
+			msg.btn1 -= 1
+
 
 		#Detect keys for multipliers
 		elif 'h' in char:
-			self.mult = 1.0/3.0
+			self.mult = 1.0/1000.0
 		elif 'j' in char:
-			self.mult = 2.0/3.0
+			self.mult = 1.0/500.0
 		elif 'k' in char:
-			self.mult = 1.0
+			self.mult = 1.0/100.0
+
 
 		#Dummy character that also works to stop the vehicle
 		elif '0' in char:
 			pass
+
 
 		msg.axis1 = msg.axis1*self.mult
 		msg.axis2 = msg.axis2*self.mult
