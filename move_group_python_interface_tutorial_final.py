@@ -48,16 +48,17 @@ import moveit_commander
 import moveit_msgs.msg
 import geometry_msgs.msg
 from math import pi
+import numpy as np
 from std_msgs.msg import String, Float32
 from geometry_msgs.msg import Pose
 from moveit_commander.conversions import pose_to_list
-#from user_input.msg import Velocity, JoyCmd
+# from user_input.msg import Velocity, JoyCmd
 ## END_SUB_TUTORIAL
 
 import roslib;
 
-#roslib.load_manifest('robotiq_2f_gripper_control')
-#from robotiq_2f_gripper_control.msg import _Robotiq2FGripper_robot_output  as outputMsg
+# roslib.load_manifest('robotiq_2f_gripper_control')
+# from robotiq_2f_gripper_control.msg import _Robotiq2FGripper_robot_output  as outputMsg
 from time import sleep
 
 force1 = 0
@@ -159,7 +160,7 @@ class MoveGroupPythonIntefaceTutorial(object):
         self.planning_frame = planning_frame
         self.eef_link = eef_link
         self.group_names = group_names
-        #self.command = outputMsg.Robotiq2FGripper_robot_output()
+        # self.command = outputMsg.Robotiq2FGripper_robot_output()
         self.pose = geometry_msgs.msg.Pose()
 
         self.pose.orientation.x = 0.0
@@ -452,14 +453,14 @@ class MoveGroupPythonIntefaceTutorial(object):
         # command = self.command
 
         if char == 'a':
-            #self.command = outputMsg.Robotiq2FGripper_robot_output();
+            # self.command = outputMsg.Robotiq2FGripper_robot_output();
             self.command.rACT = 1
             self.command.rGTO = 1
             self.command.rSP = 255
             self.command.rFR = 150
 
         if char == 'r':
-            #self.command = outputMsg.Robotiq2FGripper_robot_output();
+            # self.command = outputMsg.Robotiq2FGripper_robot_output();
             self.command.rACT = 0
 
         if char == 'c':
@@ -502,7 +503,7 @@ class MoveGroupPythonIntefaceTutorial(object):
 
     def publisher(self, char):
         """Main loop which requests new commands and publish them on the Robotiq2FGripperRobotOutput topic."""
-       # pub = rospy.Publisher('Robotiq2FGripperRobotOutput', outputMsg.Robotiq2FGripper_robot_output)
+        # pub = rospy.Publisher('Robotiq2FGripperRobotOutput', outputMsg.Robotiq2FGripper_robot_output)
 
         self.command = self.genCommand(char)
         print(self.command)
@@ -573,44 +574,46 @@ class MoveGroupPythonIntefaceTutorial(object):
             self.pose.position.z += self.mult
         elif key == "e":
             self.pose.position.z -= self.mult
-        
+
         elif key == "n":
-            self.z_rotate += 0.01745*self.rot_mult
-            [x_ori, y_ori, z_ori, w_ori] = self.get_quaternion_from_euler(0,0,self.z_rotate)
+            self.z_rotate += 0.01745 * self.rot_mult
+            [x_ori, y_ori, z_ori, w_ori] = get_quaternion_from_euler(0, 0, self.z_rotate)
             self.pose.orientation.x += x_ori
             self.pose.orientation.y += y_ori
             self.pose.orientation.z += z_ori
             self.pose.orientation.w += w_ori
         elif key == "m":
             self.z_rotate -= 0.01745
-            [x_ori, y_ori, z_ori, w_ori] = self.get_quaternion_from_euler(0,0,self.z_rotate)
+            [x_ori, y_ori, z_ori, w_ori] = get_quaternion_from_euler(0, 0, self.z_rotate)
             self.pose.orientation.x += x_ori
             self.pose.orientation.y += y_ori
             self.pose.orientation.z += z_ori
             self.pose.orientation.w += w_ori
 
+        else:
+            print('Invalid command given')
 
         print(self.pose)
         return
-    
 
-    def get_quaternion_from_euler(self, roll, pitch, yaw):
-        """
-        Convert an Euler angle to a quaternion.
-         
-        Input
-          :param roll: The roll (rotation around x-axis) angle in radians.
-          :param pitch: The pitch (rotation around y-axis) angle in radians.
-          :param yaw: The yaw (rotation around z-axis) angle in radians.
-       
-        Output
-          :return qx, qy, qz, qw: The orientation in quaternion [x,y,z,w] format
-        """
-        qx = np.sin(roll/2) * np.cos(pitch/2) * np.cos(yaw/2) - np.cos(roll/2) * np.sin(pitch/2) * np.sin(yaw/2)
-        qy = np.cos(roll/2) * np.sin(pitch/2) * np.cos(yaw/2) + np.sin(roll/2) * np.cos(pitch/2) * np.sin(yaw/2)
-        qz = np.cos(roll/2) * np.cos(pitch/2) * np.sin(yaw/2) - np.sin(roll/2) * np.sin(pitch/2) * np.cos(yaw/2)
-        qw = np.cos(roll/2) * np.cos(pitch/2) * np.cos(yaw/2) + np.sin(roll/2) * np.sin(pitch/2) * np.sin(yaw/2)
-        return [qx, qy, qz, qw]
+
+def get_quaternion_from_euler(roll, pitch, yaw):
+    """
+    Convert an Euler angle to a quaternion.
+
+    Input
+      :param roll: The roll (rotation around x-axis) angle in radians.
+      :param pitch: The pitch (rotation around y-axis) angle in radians.
+      :param yaw: The yaw (rotation around z-axis) angle in radians.
+
+    Output
+      :return qx, qy, qz, qw: The orientation in quaternion [x,y,z,w] format
+    """
+    qx = np.sin(roll / 2) * np.cos(pitch / 2) * np.cos(yaw / 2) - np.cos(roll / 2) * np.sin(pitch / 2) * np.sin(yaw / 2)
+    qy = np.cos(roll / 2) * np.sin(pitch / 2) * np.cos(yaw / 2) + np.sin(roll / 2) * np.cos(pitch / 2) * np.sin(yaw / 2)
+    qz = np.cos(roll / 2) * np.cos(pitch / 2) * np.sin(yaw / 2) - np.sin(roll / 2) * np.sin(pitch / 2) * np.cos(yaw / 2)
+    qw = np.cos(roll / 2) * np.cos(pitch / 2) * np.cos(yaw / 2) + np.sin(roll / 2) * np.sin(pitch / 2) * np.sin(yaw / 2)
+    return [qx, qy, qz, qw]
 
 
 def main():
@@ -629,16 +632,16 @@ def main():
             print("Press Ctrl-D to exit at any time")
             print("")
 
-            #tutorial.listener()
+            # tutorial.listener()
 
             tutorial.get_keyboard()
             print("Going to new pose")
             tutorial.go_to_pose_goal(tutorial.pose)
 
-            #cartesian_plan, fraction = tutorial.plan_cartesian_path(waypoints=[tutorial.pose])
-            #tutorial.display_trajectory(cartesian_plan)
-            #print("executing plan")
-            #tutorial.execute_plan(cartesian_plan)
+            # cartesian_plan, fraction = tutorial.plan_cartesian_path(waypoints=[tutorial.pose])
+            # tutorial.display_trajectory(cartesian_plan)
+            # print("executing plan")
+            # tutorial.execute_plan(cartesian_plan)
 
         except rospy.ROSInterruptException:
             return
