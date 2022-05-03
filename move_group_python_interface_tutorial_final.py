@@ -554,12 +554,18 @@ class MoveGroupPythonIntefaceTutorial(object):
         elif key == 'h':
             self.mult = 0.01
             self.rot_mult = 5
+            print('Pos Multiplier: ', self.mult)
+            print('Rot Multiplier: ', self.rot_mult)
         elif key == 'j':
             self.mult = 0.05
             self.rot_mult = 15
+            print('Pos Multiplier: ', self.mult)
+            print('Rot Multiplier: ', self.rot_mult)
         elif key == 'k':
             self.mult = 0.1
             self.rot_mult = 90
+            print('Pos Multiplier: ', self.mult)
+            print('Rot Multiplier: ', self.rot_mult)
 
         elif key == "w":
             self.pose.position.x += self.mult
